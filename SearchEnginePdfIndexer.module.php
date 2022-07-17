@@ -78,7 +78,7 @@ class SearchEnginePdfIndexer extends WireData implements Module, ConfigurableMod
             'title' => 'SearchEngine PDF Indexer',
             'summary' => 'SearchEngine add-on for indexing PDF files (experimental)',
             'icon' => 'file-pdf-o',
-            'version' => '0.0.1',
+            'version' => '0.0.2',
             'requires' => 'PHP>=7.4, ProcessWire>=3.0.164, SearchEngine>=0.33.0',
             'autoload' => true,
         ];
@@ -98,6 +98,7 @@ class SearchEnginePdfIndexer extends WireData implements Module, ConfigurableMod
                 $indexing_method['label'] = $this->_(substr($indexing_method['label'], 2));
             }
         }
+        $this->file_extensions = 'pdf';
         $this->indexing_method = 'disabled';
         $this->discard_builtin_index = 'no';
         if ($this->num_enabled_indexing_methods) {
@@ -220,7 +221,7 @@ class SearchEnginePdfIndexer extends WireData implements Module, ConfigurableMod
      * @return bool
      */
     protected function ___isValidFile($file): bool {
-        return strtolower($file->ext) == 'pdf' && (!$this->max_file_size || $file->filesize <= $this->max_file_size);
+        return in_array(strtolower($file->ext), explode(' ', $this->file_extensions)) && (!$this->max_file_size || $file->filesize <= $this->max_file_size);
     }
 
     /**
@@ -229,6 +230,15 @@ class SearchEnginePdfIndexer extends WireData implements Module, ConfigurableMod
      * @param InputfieldWrapper $inputfields
      */
     public function getModuleConfigInputfields(InputfieldWrapper $inputfields) {
+
+        /** @var InputfieldText */
+        $file_extensions = $this->modules->get('InputfieldText');
+        $file_extensions->name = 'file_extensions';
+        $file_extensions->label = $this->_('File extensions');
+        $file_extensions->description = $this->_('List of file extensions we want to process.');
+        $file_extensions->notes = $this->_('If there are multiple values, use space as a separator (`ext1 ext2 ext3`).');
+        $file_extensions->value = $this->file_extensions;
+        $inputfields->add($file_extensions);
 
         /** @var InputfieldRadios */
         $indexing_method = $this->modules->get('InputfieldRadios');
@@ -246,7 +256,7 @@ class SearchEnginePdfIndexer extends WireData implements Module, ConfigurableMod
         $indexing_method->value = $this->indexing_method;
         if (!$this->num_enabled_indexing_methods) {
             $indexing_method->notes = sprintf(
-                $this->_('There are currently no PDF indexing libraries available. Please make sure that you have installed this module via Composer, or alternatively executed `composer install` in the module\'s directory (`%s`).'),
+                $this->_('There are currently no indexing libraries available. Please make sure that you have installed this module via Composer, or alternatively executed `composer install` in the module\'s directory (`%s`).'),
                 $this->config->paths->{$this->className()}
             );
         } else if ($this->indexing_methods['spatie-pdf-to-text']['enabled']) {
@@ -321,7 +331,7 @@ class SearchEnginePdfIndexer extends WireData implements Module, ConfigurableMod
         $discard_builtin_index = $this->modules->get('InputfieldRadios');
         $discard_builtin_index->name = 'discard_builtin_index';
         $discard_builtin_index->label = $this->_('Discard built-in index?');
-        $discard_builtin_index->description = $this->_('By default PDF file data is appended to the built-in SearchEngine file index value. If you want to discard built-in file index, select appropriate option for this setting.');
+        $discard_builtin_index->description = $this->_('By default file data is appended to the built-in SearchEngine file index value. If you want to discard built-in file index, select appropriate option for this setting.');
         $discard_builtin_index->showIf = 'indexing_method!=disabled';
         $discard_builtin_index->addOptions([
             'no' => $this->_('No'),
