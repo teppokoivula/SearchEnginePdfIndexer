@@ -18,7 +18,7 @@ Note also that spatie/pdf-to-text requires the pdftotext CLI tool, which needs t
 
 ## Installing
 
-This module can be installed by downloading or cloning the PageRenderFindReplace directory into the /site/modules/ directory of your site, but the recommended method installign it using Composer: `composer require teppokoivula/search-engine-pdf-indexer`. Composer installation takes care of dependencies automatically, which makes following steps easier.
+This module can be installed by downloading or cloning the SearchEnginePdfIndexer directory into the /site/modules/ directory of your site, but the recommended method installign it using Composer: `composer require teppokoivula/search-engine-pdf-indexer`. Composer installation takes care of dependencies automatically, which makes following steps easier.
 
 ## License
 
