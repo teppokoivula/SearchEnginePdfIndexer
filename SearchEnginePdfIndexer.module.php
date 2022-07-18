@@ -78,7 +78,7 @@ class SearchEnginePdfIndexer extends WireData implements Module, ConfigurableMod
             'title' => 'SearchEngine PDF Indexer',
             'summary' => 'SearchEngine add-on for indexing PDF files (experimental)',
             'icon' => 'file-pdf-o',
-            'version' => '0.0.3',
+            'version' => '0.0.4',
             'requires' => 'PHP>=7.4, ProcessWire>=3.0.164, SearchEngine>=0.33.0',
             'autoload' => true,
         ];
