@@ -78,7 +78,7 @@ class SearchEnginePdfIndexer extends WireData implements Module, ConfigurableMod
             'title' => 'SearchEngine PDF Indexer',
             'summary' => 'SearchEngine add-on for indexing PDF files (experimental)',
             'icon' => 'file-pdf-o',
-            'version' => '0.0.2',
+            'version' => '0.0.3',
             'requires' => 'PHP>=7.4, ProcessWire>=3.0.164, SearchEngine>=0.33.0',
             'autoload' => true,
         ];
@@ -201,7 +201,9 @@ class SearchEnginePdfIndexer extends WireData implements Module, ConfigurableMod
             return \Spatie\PdfToText\Pdf::getText(
                 $file->filename,
                 $this->config->SearchEnginePdfIndexer['spatie_pdf_to_text_path'] ?? null,
-                $this->config->SearchEnginePdfIndexer['spatie_pdf_to_text_options'] ?? [],
+                $this->config->SearchEnginePdfIndexer['spatie_pdf_to_text_options'] ?? [
+                    'nopgbrk',
+                ],
                 (int) $this->spatie_pdf_to_text_timeout ?: 60
             );
         } catch (\Exception $e) {
